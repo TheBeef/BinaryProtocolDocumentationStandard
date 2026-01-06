@@ -90,11 +90,11 @@ The binary protocol documentation standard has a number of goals:
 | ---               | ---               | ---         | ---   |
 | <>                | Field             | Marks the start and end of a field.  A field group multiple bytes together and marks an element in the protocol. | `0x3C&nbsp;0x3E` |
 | Literal           | Literal Value     | This byte does not have a name and is just the literal value.  This is a number can uses C number prefixes (0x for hex, 0 for octal, etc) or a string surrounded by quotes ("). | |
-| =                 | Assigned value    | The field will be have this value (or set of values).  This is the same as a literal but comes after the name of the field. | `0x3D` |
-| \|                | OR                | Can only be used with values.  When you want to use a set of values instead of just one you place an \| between the values and it counts as this value or this other value. | `0x7C` |
-| :                 | Size              | The number of bytes this field is (if not provided defaults to 1, so “cmd” and “cmd:1” are the same). | `0x3A` |
-| ...               | Match Any         | This is only used as a ‘Size’ with the size symbol (:).  It matches any number of bytes until it finds a match for the next field.  This size can match 0 bytes. | `0x2E&nbsp;0x2E&nbsp;0x2E` |
-| ()                | Data Type         | What type of data is this field. If you use this, you must also specify the size (:). | `0x28&nbsp;0x29` |
-| "                 | Quote             | A quote that marks the start and end of a string value.  Used with string literals. | `0x22` |
+| =                 | Assigned value    | The field will be have this value (or set of values).  This is the same as a literal but comes after the name of the field. | 0x3D |
+| \|                | OR                | Can only be used with values.  When you want to use a set of values instead of just one you place an \| between the values and it counts as this value or this other value. | 0x7C |
+| :                 | Size              | The number of bytes this field is (if not provided defaults to 1, so “cmd” and “cmd:1” are the same). | 0x3A |
+| ...               | Match Any         | This is only used as a ‘Size’ with the size symbol (:).  It matches any number of bytes until it finds a match for the next field.  This size can match 0 bytes. | 0x2E&nbsp;0x2E&nbsp;0x2E |
+| ()                | Data Type         | What type of data is this field. If you use this, you must also specify the size (:). | 0x28&nbsp;0x29 |
+| "                 | Quote             | A quote that marks the start and end of a string value.  Used with string literals. | 0x22 |
 
 
