@@ -142,3 +142,13 @@ The assigned value is the same as a Literal value but with a field name.  The li
 | \<Start=0xFF\|0xEE\>      | Field has the name “Start” and can match 0xFF or 0xEE |
 | <Command="Hello"\|"Bye">  | Field has the name “Command” and can match 0x48 0x65 0x6c 0x6c 0x6f, OR 0x42 0x79 0x65 |
 
+### OR
+The or symbol (|) is used to say any literal from a set of literal can be a match.  These can be numbers or strings (but they can not be mixed).  You list all the values you which to accept with a pipe bar between them.  This is valid in assigned values and literal values.
+
+#### Examples
+| BPDS                      | Description |
+| ---                       | ---         |
+| <0x55\|0xAA\|0x00>        | A literal that must be 55 hex OR AA hex OR 00 hex. |
+| <Start=0xFF\|0xEE>        | Field has the name “Start” and can match 0xFF OR 0xEE |
+| <Command="Hello"\|"Bye">  | Field has the name “Command” and can match 0x48 0x65 0x6c 0x6c 0x6f, OR 0x42 0x79 0x65 |
+
