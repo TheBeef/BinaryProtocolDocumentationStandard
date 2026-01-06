@@ -106,3 +106,14 @@ If it’s a string then it uses quotes around it and will be use a size the same a
 
 If the field is not a literal then it starts with the name of the field followed by any attributes.  For example <Start>, <Start:2>, <Start=0xFF>.
 
+#### Examples
+| BPDS Definition   | Description |
+| ---               | ---         |
+| <0x55>            | A literal that must be 55 hex. |
+| <0x55\|0xAA>      | A literal that must be 55 hex OR AA hex. |
+| <32>              | A literal that must the 32 decimal. |
+| <"Cat">           | A literal that must match 0x43, 0x61, and 0x74 |
+| <"Cat"\|"Dog">    | A literal that must match 0x43, 0x61, and 0x74 OR 0x44 0x6F and 0x67 |
+| <Start>           | A field with the name of "Start".  It can be any 1 byte value (the value doesn’t mater only that it is 1 byte long). |
+| <Start:2>         | A field with the name "Start" that is 2 bytes in length.  The value doesn't mater, just that it is 2 bytes in length. |
+| <Start=0x55>      | A field with the name "Start" that is 1 byte long and must be the value 55 Hex. |
