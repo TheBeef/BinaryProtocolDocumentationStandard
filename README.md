@@ -84,8 +84,8 @@ The binary protocol documentation standard has a number of goals:
 
 # Format
 ## Symbols
-
 | Symbol            | Name              | Description | Value |
+| ---               | ---               | ---         | ---   |
 | <>                | Field             | Marks the start and end of a field.  A field group multiple bytes together and marks an element in the protocol. | 0x3C 0x3E |
 | Literal           | Literal Value     | This byte does not have a name and is just the literal value.  This is a number can uses C number prefixes (0x for hex, 0 for octal, etc) or a string surrounded by quotes ("). |
 | =                 | Assigned value    | The field will be have this value (or set of values).  This is the same as a literal but comes after the name of the field. | 0x3D |
