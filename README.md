@@ -180,3 +180,11 @@ For example if you have <Data:...><0x0A> this matches all chars until a 0x0A (ne
 
 If the next field is more than 1 byte then all the bytes have to match and will not be part of the field using the match any symbol.
 
+#### Examples
+| BPDS                                      | Description |
+| ---                                       | ---         |
+| <Data:...><0x00>                          | A zero terminated string |
+| <CmdNum:...><EndOfCmd="END">              | A string that must end is the string “END”.  So 0x31 0x32 0x45 0x4E 0x44 would end up with a CmdNum field = to “12”. |
+| <Comment:...><EndOfComment=".">           | A comment that ends with a period. |
+| <0xFF><Cmd><Data:2><Note:...><0x00><0x77> | A longer definition with a ‘Note’ field that is variable size terminated by a NULL char. |
+
