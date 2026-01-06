@@ -152,3 +152,19 @@ The or symbol (|) is used to say any literal from a set of literal can be a matc
 | <Start=0xFF\|0xEE>        | Field has the name “Start” and can match 0xFF OR 0xEE |
 | <Command="Hello"\|"Bye">  | Field has the name “Command” and can match 0x48 0x65 0x6c 0x6c 0x6f, OR 0x42 0x79 0x65 |
 
+### Size
+The size symbol tells you how many bytes this field uses.  The size symbol uses the colon (:) and must follow a field name.  If the size symbol is not provided then the size of the field will be 1 byte.
+
+This can also be the field name of a previous field. In this case what is being stated is that this field is variable length and the number of bytes to expect comes from this previous field (label).
+
+This can also be set to match any (...) in which case it means that the size of this field is variable and may between 0 and unlimited.  The field is terminated by the next field.  So for example if a size is match any and the next field is a literal 0x0A then all the bytes between this point and the 0x0A fit into this field.  See Match Any below for more info.
+
+#### Examples
+| BPDS                      | Description |
+| ---                       | ---         |
+| <Len:2>                   | The length is 2 bytes |
+| <Data:32>                 | This field is 32 bytes long |
+| <Start:2=0xDEAD>          | The field “Start” is 2 bytes in size and must match the value 0xDEAD |
+| <Other:3="Cat">           | The field “Other” is 3 bytes and must match 0x43 0x61 0x74 |
+| <More:Prev>               | The field “More” uses the value from the previous “Prev” field. |
+
