@@ -188,3 +188,68 @@ If the next field is more than 1 byte then all the bytes have to match and will 
 | \<Comment:...\>\<EndOfComment="."\>                   | A comment that ends with a period. |
 | \<0xFF\>\<Cmd\>\<Data:2\>\<Note:...\>\<0x00\>\<0x77\> | A longer definition with a ‘Note’ field that is variable size terminated by a NULL char. |
 
+### Data Type
+Specifies the type of data in this field.  This lets you know how the data in the field should be interpenetrated.  This is normally out side this standard so it is considered a hint to the reader.
+
+This symbol uses the open and close brackets () and a string.  This always follows the ‘Size’ symbols value, so the size must be provided to use the ‘Data Type’ symbol (even if the size is 1).  This is so the correct number of bytes can be read even if the parser does not understand the ‘Data Type’.
+
+You may provide your own data types and provide a definition elsewhere in your documentation.  There are a number of predefined standard types (based on C):
+
+| String    | Type | Bytes |
+| ---       | ---  | ---   |
+| int8_t    | signed | 1 byte |
+| uint8_t   | unsigned | 1 byte |
+| int16_t   | signed | 2 bytes |
+| uint16_t  | unsigned | 2 bytes |
+| int32_t   | signed | 4 bytes |
+| uint32_t  | unsigned | 4 bytes |
+| int64_t   | signed | 8 bytes |
+| uint64_t  | unsigned | 8 bytes |
+| float     | floating point (IEEE 754) | 4 bytes |
+| double    | floating point (IEEE 754) | 8 bytes |
+
+#### Examples
+| BPDS                      | Description |
+| ---                       | ---         |
+| \<Count:2(uint16_t)\>     | An unsigned 16 bit value (2 bytes) |
+| \<Type:1(uint8_t)\>       | An unsigned 8 bit value (1 byte) |
+| \<Number:4(float)\>       | A floating point value 4 bytes in size. |
+
+## Endian
+This standard does not set an endian, you must provide this information in your documentation.  Providing an endian symbol would not be intuitive as there isn’t a widely known symbol for providing this information.
+
+## Reserved Symbols
+This is a note for future versions of this standard.  Math symbols have not being used for any of the known symbols (these symbols are “+”, “-”, “/”, and “*”).  This is keep the option of adding math blocks in the future.  It is not clear if adding math would be a good idea or not, so the symbols have been listed as reserved.
+
+# Tips
+## Optional fields
+BPDS does not include optional fields, this is because for optional fields there needs context and knowledge of the meaning of the bytes wish is out of scope for the BPDS.  However you can handle optional fields by using additional BPDS definitions.  For example for a single optional field you can write two BPDS definition.  One with the optional field in it and a second version with it missing.  You then document the condition in the Autodoc for each definition (see the examples).
+
+## Autodoc
+This is a blank Autodoc you can use if you decide to use this format for your details documentation.
+
+```
+/*******************************************************************************
+ * NAME:
+ *    
+ *
+ * SYNOPSIS:
+ *    
+ *
+ * PARAMETERS:
+ *    
+ *
+ * FUNCTION:
+ *    
+ *
+ * REPLY:
+ *    
+ *
+ * SEE ALSO:
+ *    
+ ******************************************************************************/
+```
+
+# More Examples
+
+
