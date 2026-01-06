@@ -251,5 +251,148 @@ This is a blank Autodoc you can use if you decide to use this format for your de
 ```
 
 # More Examples
+These are more examples of the made up protocol.  It shows optional fields, different fields based on command type, and a number of other details.
 
+This is an example of the reply from the draw command described in the “Example” sections above.
+
+```
+/*******************************************************************************
+ * NAME:
+ *    Command reply
+ *
+ * SYNOPSIS:
+ *    <Header=0xFF><Version><Prop=0><Cmd=0xFF><Len:2=0><Footer=0x77>
+ *
+ * PARAMETERS:
+ *    Head -- Part of standard header
+ *    Version -- Part of standard header.
+ *    Prop -- Must be 0x00
+ *    Cmd -- 0xFF - ack to last command
+ *    Len -- 0x00
+ *    Footer -- Part of standard header
+ *
+ * FUNCTION:
+ *    This command is an ack reply to a draw command.
+ *
+ * REPLY:
+ *    NONE
+ *
+ * SEE ALSO:
+ *    Command Protocol, Properties
+ ******************************************************************************/
+```
+
+This is an example of an optional field.  This documents the ‘Prop’ field and all the options that can used.  It provides only the details of the ‘Prop’ field but does show it in relation to the other fields (the details for the other fields are found elsewhere).
+
+```
+/*******************************************************************************
+ * NAME:
+ *    Properties
+ *
+ * SYNOPSIS:
+ *    <Header=0xFF><Version><Prop><Transparency:4(float)><FillStyle:4><Border>
+ *    <Cmd><Len:2><Data:Len><Footer=0x77>
+ *
+ * PARAMETERS:
+ *    Head -- Part of standard header.
+ *    Version -- Part of standard header.
+ *    Prop -- Props:
+ *              Bit     Meaning
+ *              0x01    Transparency
+ *              0x02    Fill style
+ *              0x04    Border thickness
+ *    Transparency -- This tells the drawing function how much transparency to
+ *                    apply to the draw command.  0 = Fully opaque, 100.0 =
+ *                    fully transparency.
+ *    FillStyle -- What fill style to use:
+ *                      0x00 -- Solid
+ *                      0x01 -- Dashed
+ *                      0x02 -- Dotted
+ *    Border -- How many pixels to make the border
+ *    Cmd -- Part of standard header.
+ *    Len -- Part of standard header.
+ *    Data -- Part of standard header.
+ *    Footer -- Part of standard header.
+ *
+ * FUNCTION:
+ *    These are the properties that can be applied.  If the bit is set in
+ *    'Prop' then you need to provide the corresponding fields.
+ *
+ * REPLY:
+ *    Depends on 'Cmd'
+ *
+ * SEE ALSO:
+ *    Command Protocol
+ ******************************************************************************/
+```
+
+This is an example of a draw command.  It fills in the details of the <data> field when used with the draw box command.
+```
+/*******************************************************************************
+ * NAME:
+ *    Draw box
+ *
+ * SYNOPSIS:
+ *    <Header=0xFF><Version><Prop><Cmd=0x01><Len:2=8><x:2><y:2><width:2>
+ *    <height:2><Footer=0x77>
+ *
+ * PARAMETERS:
+ *    Head -- Part of standard header
+ *    Version -- Part of standard header.
+ *    Prop -- Part of standard header.
+ *    Cmd -- Draw a box (0x01)
+ *    Len -- Part of standard header.  Set to 8
+ *    x -- The x point on screen for the box
+ *    y -- The y point on screen for the box
+ *    width -- The number of pixels for the width of the box
+ *    height -- The number of pixels for the height of the box
+ *    Footer -- Part of standard header
+ *
+ * FUNCTION:
+ *    This command draws a box on the display.
+ *
+ * REPLY:
+ *    Replies will an acknowledge packet.
+ *
+ * SEE ALSO:
+ *    Command Protocol, Properties, Command reply
+ ******************************************************************************/
+```
+
+This is another example of a different draw command.  It shows a draw bitmap command that uses an embedded .gif file.
+```
+/*******************************************************************************
+ * NAME:
+ *    Draw Bitmap .gif
+ *
+ * SYNOPSIS:
+ *    <Header=0xFF><Version><Prop><Cmd=0x02><Len:2><x:2><y:2><GraphicData>
+ *    <Footer=0x77>
+ *
+ * PARAMETERS:
+ *    Head -- Part of standard header
+ *    Version -- Part of standard header.
+ *    Prop -- Part of standard header.
+ *    Cmd -- Draw a bitmap stored in gif format (0x02)
+ *    Len -- Part of standard header.  The length of the 'GraphicData' + 4
+ *    x -- The x point on screen for the graphic
+ *    y -- The y point on screen for the graphic
+ *    GraphicData -- the binary data for a .gif file.  This includes the
+ *                   headers and bitmap data (basically the whole .gif file).
+ *    Footer -- Part of standard header
+ *
+ * FUNCTION:
+ *    This command draws a bitmap to the display.  The bitmap is stored as
+ *    a gif.
+ *
+ * REPLY:
+ *    Replies will an acknowledge packet.
+ *
+ * SEE ALSO:
+ *    Command Protocol, Properties, Command reply
+ ******************************************************************************/
+```
+
+# License
+Binary Protocol Documentation Standard  © 2025 by Paul Hutchinson is licensed under CC BY-SA 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
 
