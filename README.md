@@ -15,7 +15,7 @@ We start with an example to give an idea of how this works.
 <Header=0xFF><Version><Prop><Cmd><Len:2><Data:Len><Footer=0x77>
 ```
 
-This is a generic description of a made up protocol.  You can see that it starts with a header set to the value 0xFF followed by the version and the command, because there is no size provided then these are 1 byte each.  The length is next and the :2 tells us that it's 2 bytes.  The length is followed by the data and we can see the size is a field 'Len' so there will be 'Len' bytes of data (that we can only determine when we read a packet).  The data will be followed by a footer byte that is always set to 0x77. 
+This is a generic description of a made up protocol.  You can see that it starts with a header set to the value 0xFF followed by the version.  This is followed by prop that is a bit field (1 byte in size) and then the command, because there is no size provided then these are 1 byte each.  The length is next and the :2 tells us that it's 2 bytes.  The length is followed by the data and we can see the size is a field 'Len' so there will be 'Len' bytes of data (that we can only determine when we read a packet).  The data will be followed by a footer byte that is always set to 0x77. 
 
 So you would expect to see a data stream something like:
 
@@ -150,7 +150,7 @@ The assigned value is the same as a Literal value but with a field name.  The li
 | <Command="Hello"\|"Bye">  | Field has the name "Command" and can match 0x48 0x65 0x6c 0x6c 0x6f, OR 0x42 0x79 0x65 |
 
 ### OR
-The or symbol (|) is used to say any literal from a set of literal can be a match.  These can be numbers or strings (but they cannot be mixed).  You list all the values you wish to accept with a pipe bar between them.  This is valid in assigned values and literal values.
+The OR symbol (|) is used to say any literal from a set of literal can be a match.  These can be numbers or strings (but they cannot be mixed).  You list all the values you wish to accept with a pipe bar between them.  This is valid in assigned values and literal values.
 
 #### Examples
 | BPDS                      | Description |

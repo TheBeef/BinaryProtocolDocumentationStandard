@@ -1,35 +1,44 @@
 <div class="BPDS_Page">
-<center>Binary Protocol Documentation Standard</center>
+<center>Binary Protocol Description Standard</center>
 <br/>
 <center>1.0</center>
 <br/>
 
-<h1>Rational</h1>
+<h1>Rationale</h1>
 <p>When working with binary protocols the format and details of the
-documentation have been inconstant and often hard to follow.  The
-binary protocol documentation standard (BPDS) tries to fix this, using
-a standard format that is human readable, intuitive, and text based.  
-The hope is that will improve the readability of the documentation for
-byte based protocols.</p>
+documentation have been inconsistent and often hard to follow.  The
+binary protocol description standard (BPDS) tries to fix this, using
+a standard format that is human readable, intuitive, and text based. 
+The hope is that will improve the readability of the documentation
+for byte based protocols.</p>
 
-<p>The format was designed to be used by humans to document byte based binary
-protocols in a simple to understand format.  It tries to keep things simple
-whenever possible, and doesn't try to cover every possible use case.  BPDS
-does not try to represent possible states, message responses, the flow of a
-protocol, handshaking, or how the protocol should be used. It just tries to
-explain the structure of a packet of data, not how to work with it.</p>
+<p>The format was designed to be used by humans to document byte
+based binary protocols in a simple to understand format.  It tries to
+keep things simple whenever possible, and doesn't try to cover every
+possible use case.  BPDS does not try to represent possible states,
+message responses, the flow of a protocol, handshaking, or how the
+protocol should be used. It just tries to explain the structure of a
+packet of data, not how to work with it.</p>
 
-<p>BPDS was also designed so that a machine can parse a BPDS definition and
-be able to decode what bytes in a protocol are for what. It can not interpret
-the meaning of a byte, only extract the structure of the packet, knowing how
-to recognize the start and end of the packet and label the parts.</p>
+<p>BPDS was also designed so that a machine can parse a BPDS
+definition and be able to decode what bytes in a protocol are for
+what. It cannot interpret the meaning of a byte, only extract the
+structure of the packet, knowing how to recognize the start and end
+of the packet and label the parts.</p>
 
 <h1>Example</h1>
 <p>We start with an example to give an idea of how this works.</p>
-<div class='Code'>&lt;Header=0xFF&gt;&lt;Version&gt;&lt;Cmd&gt;&lt;Len:2&gt;&lt;Data:Len&gt;&lt;Footer=0x77&gt;</div>
-<p>This is a generic description of a made up protocol.  You can see that it starts with a header set to the value 0xFF followed by the version and the command, because there is no size provided then these are 1 byte each.  The length is next and the :2 tells us that it's 2 bytes.  The length is followed by the data and we can see the size is a field 'Len' so there will be 'Len' bytes of data (that we can only determine when we read a packet).  The data will be followed by a footer byte that is always set to 0x77.</p>
+<div class='Code'>&lt;Header=0xFF&gt;&lt;Version&gt;&lt;Prop&gt;&lt;Cmd&gt;&lt;Len:2&gt;&lt;Data:Len&gt;&lt;Footer=0x77&gt;</div>
+<p>This is a generic description of a made up protocol.  You can see
+that it starts with a header set to the value 0xFF followed by the
+version and the command, because there is no size provided then these
+are 1 byte each.  The length is next and the :2 tells us that it's 2
+bytes.  The length is followed by the data and we can see the size is
+a field 'Len' so there will be 'Len' bytes of data (that we can only
+determine when we read a packet).  The data will be followed by a
+footer byte that is always set to 0x77. </p>
 <p>So you would expect to see a data stream something like:</p>
-<div class='Code'>0xFF 0x01 0x01 0x00 0x08 0x64 0x64 0x10 0x10 0x00 0xFF 0x00 0x00 0x77</div>
+<div class='Code'>0xFF 0x01 0x00 0x01 0x00 0x08 0x64 0x64 0x10 0x10 0x00 0xFF 0x00 0x00 0x77</div>
 <p>Documented in Autodoc format (as a C comment):</p>
 <div class='Code'>/*******************************************************************************
  * NAME:
@@ -39,7 +48,7 @@ to recognize the start and end of the packet and label the parts.</p>
  *    &lt;Header=0xFF&gt;&lt;Version&gt;&lt;Prop&gt;&lt;Cmd&gt;&lt;Len:2&gt;&lt;Data:Len&gt;&lt;Footer=0x77&gt;
  *
  * PARAMETERS:
- *    Head -- Marker used for resyncing.  Always 0xFF.
+ *    Header -- Marker used for resyncing.  Always 0xFF.
  *    Version -- What version of the protocol we are using.  Currently only
  *               version 1 is defined.
  *    Prop -- What optional properties are included in this packet.  This is a bit
@@ -50,7 +59,7 @@ to recognize the start and end of the packet and label the parts.</p>
  *    Cmd -- What command we are going to be executing.  See details below
  *           for a description of available commands.
  *    Len -- The length of the 'Data'.  This does not include the 'Footer',
- *           only the data it's self.  This is in big endian.
+ *           only the data itself.  This is in big endian.
  *    Data -- The data for this command.  The size will depend on the command.
  *    Footer -- Marker used for resyncing.  Always 0x77.
  *
@@ -64,52 +73,37 @@ to recognize the start and end of the packet and label the parts.</p>
  * SEE ALSO:
  *    
  ******************************************************************************/</div>
-<p>As you can see when used with an Autodoc style comment it is very effective at explaining the protocol and can be included directly with the handling code.</p>
+<p>As you can see when used with an Autodoc style comment it is very
+effective at explaining the protocol and can be included directly
+with the handling code.</p>
 
 <h1>Goals</h1>
-<p>The binary protocol documentation standard has a number of goals:</p>
+<p>The binary protocol description standard has a number of goals:</p>
 <table class='BPDS_Table'>
     <tr>
         <td>Human readable</td>
-        <td>AscII characters are used for the symbols that mark parts
-            of the specification, these are easy to pick out from the
-            text and are used extensively in programming.  The field
-            names and labels are human readable strings.
-        </td>
+        <td>AscII characters are used for the symbols that mark parts of the specification, these are easy to pick out from the text and are used extensively in programming.  The field names and labels are human readable strings.</td>
     </tr>
 
     <tr>
         <td>Machine readable</td>
-        <td>Computers should be able to parse a BPDS definition string to be
-            able to act on a byte stream encoded with in that format.  This is
-            useful for things like generic highlighters or error checkers.
-        </td>
+        <td>Computers should be able to parse a BPDS definition string to be able to act on a byte stream encoded in that format.  This is useful for things like generic highlighters or error checkers.</td>
     </tr>
     <tr>
         <td>Intuitive</td>
-        <td>Someone should be able to look at a BPDS definition string and
-            more or less understand how to interpret the meaning without needing
-            to read a document explaining what BPDS is or how it works.
-        </td>
+        <td>Someone should be able to look at a BPDS definition string and more or less understand how to interpret the meaning without needing to read a document explaining what BPDS is or how it works.</td>
     </tr>
     <tr>
         <td>Single line</td>
-        <td>A single line should be able to describe a packet.  This keeps the
-            description compact and allows it be added to larger documents.
-        </td>
+        <td>A single line should be able to describe a packet.  This keeps the description compact and allows it be added to larger documents.</td>
     </tr>
     <tr>
         <td>Text based</td>
-        <td>Sticking with a text based description means it can be easily
-            copied and embedded in other documents like in source code.
-        </td>
+        <td>Sticking with a text based description means it can be easily copied and embedded in other documents like in source code.</td>
     </tr>
     <tr>
         <td>Byte based</td>
-        <td>Most protocols are byte based and trying to support arbitrary or
-            variable bit protocols would make the standard to complex, so to
-            keep things simple it is restricted to bytes.
-        </td>
+        <td>Most protocols are byte-based.  Supporting arbitrary bit-level protocols would significantly increase complexity and is therefore intentionally excluded.</td>
     </tr>
 </table>
 
@@ -118,11 +112,7 @@ to recognize the start and end of the packet and label the parts.</p>
 <table class='BPDS_Table'>
     <tr>
         <td>Field</td>
-        <td>A grouping of bytes that form an element of the protocol.  This
-            maybe a single byte or multiple bytes together.  This identifies
-            a part of the message.  For example the length would be considered
-            a field that indicates the length in the message.
-        </td>
+        <td>A grouping of bytes that form an element of the protocol.  This maybe a single byte or multiple bytes together.  This identifies a part of the message.  For example, the length would be considered a field that indicates the length in the message.</td>
     </tr>
     <tr>
         <td>Literal</td>
@@ -130,9 +120,7 @@ to recognize the start and end of the packet and label the parts.</p>
     </tr>
     <tr>
         <td>Symbol</td>
-        <td>A byte that is recognized as having meaning in the BPDS.  For
-            example &lt; and &gt; mark the start and end of a field.
-        </td>
+        <td>A byte that is recognized as having meaning in the BPDS.  For example, '<' and '>' mark the start and end of a field.</td>
     </tr>
     <tr>
         <td>Field name</td>
@@ -176,7 +164,7 @@ to recognize the start and end of the packet and label the parts.</p>
     <tr>
         <td>Literal</td>
         <td>Literal Value</td>
-        <td>This byte does not have a name and is just the literal value.  This is a number can uses C number prefixes (0x for hex, 0 for octal, etc) or a string surrounded by quotes (").</td>
+        <td>This byte does not have a name and is just the literal value.  If this is a number can uses C number prefixes (0x for hex, 0 for octal, etc) or a string surrounded by quotes (").</td>
         <td></td>
     </tr>
     <tr>
@@ -199,15 +187,9 @@ to recognize the start and end of the packet and label the parts.</p>
     </tr>
     <tr>
         <td>...</td>
-        <td>Match Any</td>
-        <td>This is only used as a 'Size' with the size symbol (:).  It matches any number of bytes until it finds a match for the next field.  This size can match 0 bytes.</td>
+        <td>Variable size</td>
+        <td>This is only used as a 'Size' with the size symbol (:).  It matches any number of bytes until it finds a match for the next field.  This size can match 0 bytes.  You must have some kind of terminating field following this as otherwise there is no way to end the stream.</td>
         <td>0x2E 0x2E 0x2E</td>
-    </tr>
-    <tr>
-        <td>()</td>
-        <td>Data Type</td>
-        <td>What type of data is this field. If you use this, you must also specify the size (:).</td>
-        <td>0x28 0x29</td>
     </tr>
     <tr>
         <td>"</td>
@@ -219,27 +201,28 @@ to recognize the start and end of the packet and label the parts.</p>
 
 <h3>Fields</h3>
 <p>
-    A field start with a &lt; symbol and ends with a &gt; symbol.  A field is
-    a group of bytes together and makes up a base element in the protocol.  A
-    field includes information about the group such as size, literal values,
-    and type information.
+    A field starts with the '&lt;' symbol and ends with the '&gt;'
+symbol.  A field is a group of bytes together and makes up a base
+element in the protocol.  A field includes information about the
+group such as size, literal values, and type information.
 </p>
 <p>
-    If the field is a literal then it is just the literal and does not use any
-    other attributes expect the OR (|) attribute.  The literal can be a number
-    or a string.  If it's a number then it uses C number prefixes (0x for hex,
-    0 for octal, etc) and can be any number of bytes (although going over 8
-    bytes (64 bit) might make parsers fail).
+If the field is a literal then it is just the literal and does not
+use any other attributes expect the OR (|) attribute.  The literal
+can be a number or a string (but not both).  If it's a number then it
+uses C number prefixes (0x for hex, 0 for octal, etc) and can be any
+number of bytes (although going over 8 bytes (64 bit) might make
+parsers fail).
 </p>
 <p>
-    If it's a string then it uses quotes around it and will be use a size
-    the same as the string length.  For example &lt;"Dog"|"Fish"&gt; will
-    match a 3 byte string or a 4 byte string.
+If it's a string then it will have quotes around it and will have
+a size the same as the string length.  For example, &lt;&quot;Dog&quot;|&quot;Fish&quot;&gt;
+will match a 3 byte string or a 4 byte string.
 </p>
 <p>
-    If the field is not a literal then it starts with the name of the field
-    followed by any attributes.  For
-    example &lt;Start&gt;, &lt;Start:2&gt;, &lt;Start=0xFF&gt;.
+If the field is not a literal then it starts with the name of the
+field followed by any attributes.  For example, &lt;Start&gt;,
+&lt;Start:2&gt;, &lt;Start=0xFF&gt;.
 </p>
 
 <h4>Examples</h4>
@@ -280,10 +263,25 @@ to recognize the start and end of the packet and label the parts.</p>
 
 <h3>Literal Value</h3>
 <p>
-    A literal value is a constant value that must match.  These are numbers
-    or strings.  Strings are wrapped in quotes.  Numbers use C number
-    prefixes (0x for hex, 0 for octal, etc).
+    A literal value is a constant value that must match.  These are
+    numbers or strings.
 </p>
+<p>Numbers use C language literal number prefixes.  Supported
+prefixes:</p>
+<ul>
+    <li><p>Decimal (base 10) -- No prefix is used.  The number starts
+    with a non-zero digit.  Example 123, 45, etc.</p></li>
+    <li><p>Octal (base 8) -- The number is prefixed with a single zero
+    (0).  Example 076, 012, etc.</p></li>
+    <li><p>Hexadecimal (base 16) -- The number is prefixed with 0x or
+    0X.  Example 0x2A, 0XFf, etc.</p></li>
+    <li><p>Binary (base 2) -- The number is prefixed with 0b or 0B. 
+    Example 0b1010, 0B10, etc.</p></li>
+</ul>
+<p>Strings are wrapped in quotes.  Quotes nest, so this means that
+quotes are counted, there must always a matching end quote for every
+quote in the literal.  There is no need to escape the quotes inside
+literals.</p>
 
 <h4>Examples</h4>
 <table class='BPDS_Table'>
@@ -303,13 +301,15 @@ to recognize the start and end of the packet and label the parts.</p>
         <td>&lt;"Hello"|"Bye"&gt;</td>
         <td>Can match 0x48 0x65 0x6c 0x6c 0x6f, OR 0x42 0x79 0x65</td>
     </tr>
+    <tr>
+        <td>&lt;&quot;Nested&quot;quotes&quot;Here&quot;&gt;</td>
+        <td>Must match 0x4e 0x65 0x73 0x74 0x65 0x64 0x22 0x71 0x75 0x6f 0x74 0x65 0x73 0x22 0x48 0x65 0x72 0x65</td>
+    </tr>
 </table>
 
 <h3>Assigned value</h3>
 <p>
-    The assigned value is the same as a Literal value but with a field name.
-    The literal value is after a equal sign (=) and follows the same rules as
-    a literal.
+The assigned value is the same as a Literal value but with a field name.  The literal value is after a equal sign (=) and follows the same rules as a literal.
 </p>
 
 <h4>Examples</h4>
@@ -330,10 +330,7 @@ to recognize the start and end of the packet and label the parts.</p>
 
 <h3>OR</h3>
 <p>
-    The or symbol (|) is used to say any literal from a set of literal can be
-    a match.  These can be numbers or strings (but they can not be mixed).
-    You list all the values you which to accept with a pipe bar between them.
-    This is valid in assigned values and literal values.
+The OR symbol (|) is used to say any literal from a set of literal can be a match.  These can be numbers or strings (but they cannot be mixed).  You list all the values you wish to accept with a pipe bar between them.  This is valid in assigned values and literal values.
 </p>
 <h4>Examples</h4>
 <table class='BPDS_Table'>
@@ -353,23 +350,25 @@ to recognize the start and end of the packet and label the parts.</p>
 
 <h3>Size</h3>
 <p>
-    The size symbol tells you how many bytes this field uses.  The size
-    symbol uses the colon (:) and must follow a field name.  If the size
-    symbol is not provided then the size of the field will be 1 byte.
+    The size symbol tells you how many bytes this field uses.  The
+    size symbol uses the colon (:) and must follow a field name.  If the
+    size symbol is not provided then the size of the field will be 1
+    byte.
 </p>
 <p>
-    This can also be the field name of a previous field. In this case what is
-    being stated is that this field is variable length and the number of
-    bytes to expect comes from this previous field (label).
+    This can also be the field name of a previous field. In this case
+    what is being stated is that this field is variable length and the
+    number of bytes to expect comes from this previous field (label).
 </p>
 <p>
-    This can also be set to match any (...) in which case it means that the
-    size of this field is variable and may between 0 and unlimited.  The field
-    is terminated by the next field.  So for example if a size is match any
-    and the next field is a literal 0x0A then all the bytes between this
-    point and the 0x0A fit into this field.  See Match Any below for more
-    info.
+    This can also be set to variable size (...) in which case it means
+    that the size of this field is variable and may be between 0 and
+    unlimited.  The field is terminated by the next field.  So for
+    example, if a size is variable size and the next field is a literal
+    0x0A then all the bytes between this point and the 0x0A fit into this
+    field.  See variable size below for more info.
 </p>
+
 <h4>Examples</h4>
 <table class='BPDS_Table'>
     <tr>
@@ -394,16 +393,17 @@ to recognize the start and end of the packet and label the parts.</p>
     </tr>
 </table>
 
-<h3>Match Any</h3>
+<h3>Variable Size</h3>
 <p>
-    The match any symbol (...) means match all bytes until the next field
-    is satisfied.
+    The variable size symbol (...) means match all bytes until the
+    next field is satisfied.
 </p>
 <p>
-    For example if you have &lt;Data:...&gt;&lt;0x0A&gt; this matches all
-    chars until a 0x0A (new line) char is found (the new line will not be
-    part of 'Data').  So this will match (\n = 0x0A):
+    For example, if you have &lt;Data:...&gt;&lt;0x0A&gt; this matches
+    all chars until a 0x0A (new line) char is found (the new line will
+    not be part of 'Data').  So this will match (\n = 0x0A):
 </p>
+
 <table class='BPDS_Table'>
 <tr>
     <th>Stream</th>
@@ -432,8 +432,7 @@ to recognize the start and end of the packet and label the parts.</p>
 </table>
 
 <p>
-    If the next field is more than 1 byte then all the bytes have to match
-    and will not be part of the field using the match any symbol.
+    If the next field is more than 1 byte then all the bytes have to match and will not be part of the field using the variable size symbol.
 </p>
 
 <h4>Examples</h4>
@@ -452,130 +451,28 @@ to recognize the start and end of the packet and label the parts.</p>
     </tr>
     <tr>
         <td>&lt;0xFF&gt;&lt;Cmd&gt;&lt;Data:2&gt;&lt;Note:...&gt;&lt;0x00&gt;&lt;0x77&gt;</td>
-        <td>A longer definition with a 'Note' field that is variable size terminated by a NULL char.</td>
+        <td>A longer definition with a 'Note' field that is variable size terminated by a NULL (0x00)</td>
     </tr>
 </table>
-
-<h3>Data Type</h3>
-<p>
-    Specifies the type of data in this field.  This lets you know how the
-    data in the field should be interpenetrated.  This is normally out side
-    this standard so it is considered a hint to the reader.
-</p>
-<p>
-    This symbol uses the open and close brackets () and a string.  This
-    always follows the 'Size' symbols value, so the size must be provided
-    to use the 'Data Type' symbol (even if the size is 1).  This is so the
-    correct number of bytes can be read even if the parser does not understand
-    the 'Data Type'.
-</p>
-<p>
-    You may provide your own data types and provide a definition elsewhere
-    in your documentation.  There are a number of predefined standard
-    types (based on C):
-</p>
-
-<table class='BPDS_Table'>
-    <tr>
-        <td>int8_t </td>
-        <td>signed </td>
-        <td>1 byte</td>
-    </tr>
-    <tr>
-        <td>uint8_t </td>
-        <td>unsigned </td>
-        <td>1 byte</td>
-    </tr>
-    <tr>
-        <td>int16_t </td>
-        <td>signed </td>
-        <td>2 bytes</td>
-    </tr>
-    <tr>
-        <td>uint16_t </td>
-        <td>unsigned </td>
-        <td>2 bytes</td>
-    </tr>
-    <tr>
-        <td>int32_t </td>
-        <td>signed </td>
-        <td>4 bytes</td>
-    </tr>
-    <tr>
-        <td>uint32_t </td>
-        <td>unsigned </td>
-        <td>4 bytes</td>
-    </tr>
-    <tr>
-        <td>int64_t </td>
-        <td>signed </td>
-        <td>8 bytes</td>
-    </tr>
-    <tr>
-        <td>uint64_t </td>
-        <td>unsigned </td>
-        <td>8 bytes</td>
-    </tr>
-    <tr>
-        <td>float </td>
-        <td>floating point (IEEE 754) </td>
-        <td>4 bytes</td>
-    </tr>
-    <tr>
-        <td>double </td>
-        <td>floating point (IEEE 754) </td>
-        <td>8 bytes</td>
-    </tr>
-</table>
-
-<h4>Examples</h4>
-<table class='BPDS_Table'>
-    <tr>
-        <td>&lt;Count:2(uint16_t)&gt;</td>
-        <td>An unsigned 16 bit value (2 bytes)</td>
-    </tr>
-    <tr>
-        <td>&lt;Type:1(uint8_t)&gt;</td>
-        <td>An unsigned 8 bit value (1 byte)</td>
-    </tr>
-    <tr>
-        <td>&lt;Number:4(float)&gt;</td>
-        <td>A floating point value 4 bytes in size.</td>
-    </tr>
-</table>
-
 
 <h3>Endian</h3>
 <p>
-    This standard does not set an endian, you must provide this information in
-    your documentation.  Providing an endian symbol would not be intuitive as
-    there isn't a widely known symbol for providing this information.
+    This standard does not set an endian, you must provide this information in your documentation.  Providing an endian symbol would not be intuitive as there isn't a widely known symbol for providing this information.
 </p>
 
 <h3>Reserved Symbols</h3>
 <p>
-    This is a note for future versions of this standard.  Math symbols have
-    not being used for any of the known symbols (these symbols
-    are "+", "-", "/", and "*").  This is keep the option of adding math
-    blocks in the future.  It is not clear if adding math would be a good
-    idea or not, so the symbols have been listed as reserved.
+    The following symbols are reserved for future use.  Math symbols have not being used for any of the known symbols (these symbols are "+", "-", "/", and "*").  This is keep the option of adding math blocks in the future.  It is not clear if adding math would be a good idea or not, so the symbols have been listed as reserved.
 </p>
 
 <h1>Tips</h1>
 <h2>Optional fields</h2>
 <p>
-    BPDS does not include optional fields, this is because for optional fields
-    there needs context and knowledge of the meaning of the bytes wish is out
-    of scope for the BPDS.  However you can handle optional fields by using
-    additional BPDS definitions.  For example for a single optional field you
-    can write two BPDS definition.  One with the optional field in it and a
-    second version with it missing.  You then document the condition in the
-    Autodoc for each definition (see the examples).
+BPDS does not include optional fields, this is because for optional fields there needs context and knowledge of the meaning of the bytes which is out of scope for the BPDS.  However you can handle optional fields by using additional BPDS definitions.  For example, for a single optional field you can write two BPDS definition.  One with the optional field in it and a second version with it missing.  You then document the condition in the Autodoc for each definition (see the examples).
 </p>
 <h2>Autodoc</h2>
 <p>
-    This is a blank Autodoc you can use if you decide to use this format for
-    your details documentation.
+    This is a blank Autodoc you can use if you decide to use this format for your details documentation.
 </p>
 
 <div class='Code'>/*******************************************************************************
@@ -599,12 +496,10 @@ to recognize the start and end of the packet and label the parts.</p>
  ******************************************************************************/</div>
 <h2>More Examples</h2>
 <p>
-    These are more examples of the made up protocol.  It shows optional fields,
-    different fields based on command type, and a number of other details.
+    These are more examples of the made up protocol.  It shows optional fields, different fields based on command type, and a number of other details.
 </p>
 <p>
-    This is an example of the reply from the draw command described in the
-    "Example" sections above.
+    This is an example of the reply from the draw command described in the "Example" sections above.
 </p>
 
 <div class='Code'>/*******************************************************************************
@@ -615,8 +510,8 @@ to recognize the start and end of the packet and label the parts.</p>
  *    &lt;Header=0xFF&gt;&lt;Version&gt;&lt;Prop=0&gt;&lt;Cmd=0xFF&gt;&lt;Len:2=0&gt;&lt;Footer=0x77&gt;
  *
  * PARAMETERS:
- *    Head -- Part of standard header
- *    Version -- Part of standard header.
+ *    Header -- Part of standard header
+ *    Version -- Part of standard header
  *    Prop -- Must be 0x00
  *    Cmd -- 0xFF - ack to last command
  *    Len -- 0x00
@@ -633,10 +528,7 @@ to recognize the start and end of the packet and label the parts.</p>
  ******************************************************************************/</div>
 
 <p>
-    This is an example of an optional field.  This documents the 'Prop' field
-    and all the options that can used.  It provides only the details of the
-    'Prop' field but does show it in relation to the other fields (the details
-    for the other fields are found elsewhere).
+    This is an example of an optional field.  This documents the 'Prop' field and all the options that can used.  It provides only the details of the 'Prop' field but does show it in relation to the other fields (the details for the other fields are found elsewhere).
 </p>
 
 <div class='Code'>/*******************************************************************************
@@ -644,11 +536,11 @@ to recognize the start and end of the packet and label the parts.</p>
  *    Properties
  *
  * SYNOPSIS:
- *    &lt;Header=0xFF&gt;&lt;Version&gt;&lt;Prop&gt;&lt;Transparency:4(float)&gt;&lt;FillStyle:4&gt;&lt;Border&gt;
+ *    &lt;Header=0xFF&gt;&lt;Version&gt;&lt;Prop&gt;&lt;Transparency:4&gt;&lt;FillStyle:4&gt;&lt;Border&gt;
  *    &lt;Cmd&gt;&lt;Len:2&gt;&lt;Data:Len&gt;&lt;Footer=0x77&gt;
  *
  * PARAMETERS:
- *    Head -- Part of standard header.
+ *    Header -- Part of standard header.
  *    Version -- Part of standard header.
  *    Prop -- Props:
  *              Bit     Meaning
@@ -680,8 +572,8 @@ to recognize the start and end of the packet and label the parts.</p>
  ******************************************************************************/</div>
 
 <p>
-    This is an example of a draw command.  It fills in the details of the
-    &lt;data&gt; field when used with the draw box command.
+    This is an example of a draw command.  It fills in the details of
+    the &lt;data&gt; field when used with the draw box command.
 </p>
 
 <div class='Code'>/*******************************************************************************
@@ -693,7 +585,7 @@ to recognize the start and end of the packet and label the parts.</p>
  *    &lt;height:2&gt;&lt;Footer=0x77&gt;
  *
  * PARAMETERS:
- *    Head -- Part of standard header
+ *    Header -- Part of standard header
  *    Version -- Part of standard header.
  *    Prop -- Part of standard header.
  *    Cmd -- Draw a box (0x01)
@@ -715,8 +607,7 @@ to recognize the start and end of the packet and label the parts.</p>
  ******************************************************************************/</div>
 
 <p>
-    This is another example of a different draw command.  It shows a draw
-    bitmap command that uses an embedded .gif file.
+    This is another example of a different draw command.  It shows a draw bitmap command that uses an embedded .gif file.
 </p>
 
 <div class='Code'>/*******************************************************************************
@@ -728,7 +619,7 @@ to recognize the start and end of the packet and label the parts.</p>
  *    &lt;Footer=0x77&gt;
  *
  * PARAMETERS:
- *    Head -- Part of standard header
+ *    Header -- Part of standard header
  *    Version -- Part of standard header.
  *    Prop -- Part of standard header.
  *    Cmd -- Draw a bitmap stored in gif format (0x02)
@@ -752,7 +643,7 @@ to recognize the start and end of the packet and label the parts.</p>
 
 <h3>License</h3>
 <p>
-    Binary Protocol Documentation Standard (C) 2025 by Paul Hutchinson is
+    Binary Protocol Documentation Standard (C) 2026 by Paul Hutchinson is
     licensed under CC BY-SA 4.0. To view a copy of this license,
     visit <a href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a>
 </p>
